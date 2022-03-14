@@ -1,0 +1,191 @@
+@import "~office-ui-fabric-react/dist/sass/References.scss";
+@import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
+
+
+:global(#workbenchPageContent) {
+  max-width: initial;
+}
+
+:global(.CanvasZone > div) {
+  width: 100%;
+}
+
+
+:global(.modal-content) {   
+  font-family: "Oswald" !important;
+
+  position: relative !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -ms-flex-direction: column !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  pointer-events: auto !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  background-clip: none !important;
+  border: 0px solid rgba(0,0,0,.2) !important;
+  border-radius: 1.3em !important;
+  outline: 0 !important;
+}
+
+:global(.modal-header) {
+  font-family: "Oswald" !important;
+
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -ms-flex-align: start !important;
+  align-items: flex-start !important;
+  -ms-flex-pack: justify !important;
+  justify-content: space-between !important;
+  padding: 1rem !important;
+  border-bottom: 1px solid #dee2e6 !important;
+  border-top-left-radius: calc(1.3rem - 1px) !important;
+  border-top-right-radius: calc(1.3rem - 1px) !important;
+}
+
+// :global(.close) {
+//   float: right !important;
+//   font-size: 2.5rem !important;
+//   font-weight: 700 !important;
+//   line-height: 0.75 !important;
+//   margin-top: 35px !important;
+//   color: #fff !important;
+//   text-shadow: 0 1px 0 #fff !important;
+//   opacity: 1 !important;
+// }
+:global(.close) {
+  color: white !important;
+  opacity: 1 !important;
+  line-height: 0.75 !important;
+  font-size: 2.5rem !important;
+
+
+}
+
+
+.MainContainer {
+  // font-family: "Oswald" !important;
+  font-family: "Oswald" !important;
+
+  width: 100%;
+  min-height: 200px;
+  height: 200px;
+  //background-image: url(https://bgsw1.sharepoint.com/sites/Testing_Publishing/SiteAssets/Brand_Spotlight/UStudio.png);
+  /* width: 800px; */
+  /* max-width: 90%; */
+  overflow: hidden;
+  background-position: right center;
+  // background-attachment: local;
+
+  img {
+    display: block;
+    height: auto;
+    //max-width: 100%;
+    width: 100%;
+    // max-height: none;
+    //background-image: url(https://bgsw1.sharepoint.com/sites/Testing_Publishing/SiteAssets/Brand_Spotlight/UStudio.png);
+  }
+
+  .callToAction {
+    font-family: "Oswald" !important;
+    display: block;
+    float: left;
+    width: 60%;
+    background: #ffffffc0;
+    margin-top: 1.5em;
+    text-align: right;
+    font-size: 3em;
+    // padding: 0.25em 0.5em 0.25em calc(10% + 2em);
+    padding: 0.25em 0.5em 0.25em calc(10% + -0.5em);
+   // width: min-content;
+    color: #424242;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+
+    
+  }
+
+
+//   .MainContainer_bf2e3219 .callToAction_bf2e3219 {
+//     font-family: Oswald!important;
+//     display: block;
+//     float: left;
+//     width: 50%;
+//     background: hsla(0,0%,100%,.7529411764705882);
+//     margin-top: 1.5em;
+//     text-align: right;
+//     /* width: min-content; */
+//     width: min-content;
+//     font-size: 3em;
+//     padding: 0.25em 0.5em 0.25em calc(10% + -0.5em);
+//     color: #424242;
+//     text-transform: uppercase;
+//     text-decoration: none;
+//     cursor: pointer;
+// }
+
+
+  .callToAction:hover {
+    text-decoration: none;
+    color: #cc0a0a;
+    background-color: #ffffffe6;
+  }
+
+  i {
+    margin-left: 0.35em;
+    font-size: 1.1em;
+    color: #cc0a0a;
+  }
+
+  .arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+
+  .containermain {
+    max-width: 700px;
+    margin: 0px auto;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+ 
+
+
+
+  .modalHeader {
+    padding: 10px !important;
+    background-color: #cc0a0a;
+    color: #fff;
+    margin-right: -1px;
+  }
+
+  .addDocuments {
+    box-sizing: unset;
+
+    .docCard {
+      border: none;
+
+      .docCardHeader {
+        width: 19em;
+        border-bottom: 0;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    .modalXl {
+      width: 95%;
+      height: 100%;
+      max-width: 1425px;
+    }
+  }
+
+
+ 
+}
