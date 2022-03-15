@@ -43,15 +43,19 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
   closeModal() { this.setState({ showDescriptionModal: false }); }
 
   public componentDidMount(): void {
-    this.getAllDocs2();
+
+    const myArray = window.location.href.split("/");
+    let brandID = myArray[myArray.length - 1].split(".")[0];
+    this.getAllDocs2(brandID);
 
   }
 
   @autobind
-  public async getAllDocs2() {
+  public async getAllDocs2(brandID) {
     let selTerm = this.props.terms;
+    console.log(selTerm[0].name)
     // let allDocs = await this.SPService.getAllDocs(selTerm);
-    let allDocs = await this.SPService.getAllDocs("Subbrand1647119834538");
+    let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
     console.log(allDocs[0].ListItemAllFields.Brand.Label);
     let dataset = [];
     var myObj = (this.props.filePickerResult);

@@ -78,101 +78,13 @@ export class SPService {
 
     }
 
-    public async getAllDocs(selectedBrand) {
-        var items: any[];
-        const myArray = this.state.currPageUrl.split("/");
-        let rackName = myArray[myArray.length - 1].split(".")[0];
-        this.rackName = myArray[myArray.length - 1].split(".")[0];
-        console.log(rackName)
-        var brand = "";
+    public async getAllDocs(selectedBrand,selectedTerm) {
+     
 
         try {
-
-
-            //     $(document).ready(function() {
-            //         $().SPServices({
-            //           operation: "GetListItems",
-            //           async: false,
-            //           listName: "Programs",
-            //           CAMLViewFields: "<ViewFields><FieldRef Name='Title' /></ViewFields>",
-            //           completefunc: function (xData, Status) {
-            //             console.log(xData);
-            //             $(xData.responseXML).SPFilterNode("z:row").each(function() {
-            //               console.log($(this).attr("ows_Title"))            
-            //             });
-            //           }
-            //         });
-            //       });
-
-
-
-            //             var g;  
-            // $.ajax({  
-            //     // url:this.context.pageContext.web.absoluteUrl + "/_api/web/Lists/GetByTitle('Programs')/Items",  
-            //     url:this.context.pageContext.web.absoluteUrl + "/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/Subbrand1647119834538')/files?",
-            //     type: 'GET',  
-            //     dataType: "json",  
-            //     headers: {  
-            //         "Accept": "application/json;odata=verbose",  
-            //         "content-type": "application/json; odata=verbose",  
-            //         "X-RequestDigest": $("#__REQUESTDIGEST").val()  
-            //     },  
-            //     success: function (data) {  
-            //         console.log(data)
-            //         for (var i = 0; i < data.d.results.length; i++) {  
-            //             console.log(data.d.results[i])
-
-            //             if (data.d.results[i].FileSystemObjectType != 1) {     
-            //                        console.log(data.d.results[i])
-            //             }  
-            //         }  
-            //     },  
-            //     error: function (request, error) {  
-            //         console.log(JSON.stringify(request));  
-            //     }  
-            // });
-
-
-
-
-            // let docDetails: any[] = await sp.web.lists.getByTitle('Brand Documents').items.filter("Brand eq '" + brand + "'").select('Id,FileRef,ServerRedirectedEmbedUri,ServerRedirectedEmbedUrl,Featured,Brand').get();
-
-            // let docDetails = await pnp.sp.web.getFileByServerRelativeUrl("/sites/ModernConnect/Brand%20Documents/OurBrands1646909202679").getJSON().then((json: any) => {});
-            // pnp.sp.web.getFolderByServerRelativeUrl("/sites/ModernConnect/Brand Documents/OurBrands1646909202679/files").get().then(item => {
-
-            //     console.log(item);
-            // });
-
-            // let requestUrl = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Rackhouse%20Documents/Rack1646754094655')/files?$expand=ListItemAllFields`
-            // let requestUrl = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/Subbrand1647119834538')/files?$expand=ListItemAllFields`
-
             let requestUrl = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/${selectedBrand}')/files?$expand=ListItemAllFields`
 
             let requestUrlforFolders = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/${selectedBrand}')/folders?$expand=ListItemAllFields`
-            // let requestUrl = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/${rackName}')/files?$expand=ListItemAllFields`
-
-            // let requestUrl = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/Subbrand1647119834538')/files?$expand=ListItemAllFields&expand=Brand&filter=%20Label%20eq%20%27Bowmore%27`
-
-
-
-            // const json: any = await sp.web.getFileByServerRelativePath(requestUrl).getJSON();
-            // console.log(json)
-            // let myFiles = [];
-
-
-            // let response = await sp.web.getFolderByServerRelativeUrl('Brand%20Documents/Subbrand1647119834538').files.get()
-
-            // for (var i = 0; i < requestUrl.length; i++) {
-            //     var _ServerRelativeUrl = response[i].ServerRelativeUrl;
-            //     var file = await (await pnp.sp.web.getFileByServerRelativeUrl(_ServerRelativeUrl).getItem()).get();
-            //     console.log(file);
-            //     myFiles.push(file);
-            // }
-
-
-            // console.log(myFiles)
-
-            // console.log(response)
 
             let myItems = await (await this.context.spHttpClient.get(requestUrl, SPHttpClient.configurations.v1)).json();
             let myFolders = await (await this.context.spHttpClient.get(requestUrlforFolders, SPHttpClient.configurations.v1)).json();
@@ -191,27 +103,15 @@ export class SPService {
 
             //to check if it's a file, otherwise folder
             // if (MYITEM[i].ListItemAllFields.FileSystemObjectType != 1) {
-            console.log("I am a file");
-            var abcd = "abcd"
             var filteredItem = MYITEM.filter(function (item) {
-                return item.ListItemAllFields.Brand.Label == termsFilter;
-
+                return item.ListItemAllFields.Brand_x0020_Location.Label == selectedTerm;
             });
-            // console.log(myFiles)
 
-            // myFiles.push(filteredItem);
-            // console.log(abcd)
-            // console.log(myFiles)
             console.log(filteredItem)
-
-            // }
-            // else{
-            // }
-            // }
 
             for (var j = 0; j < myFolders.value.length; j++) {
                 console.log(myFolders.value[j].ServerRelativeUrl.substring(37))
-                let innerFiles = await this.getAllDocs(myFolders.value[j].ServerRelativeUrl.substring(37))
+                let innerFiles = await this.getAllDocs(myFolders.value[j].ServerRelativeUrl.substring(37), selectedTerm)
                 let ac = [...filteredItem, ...innerFiles]
                 console.log(ac)
 
@@ -219,14 +119,10 @@ export class SPService {
                 filteredItem = ac;
                 console.log(innerFiles)
             }
-            // var filtered = MYITEM.filter(a => a.ListItemAllFields.Brand.Label == "Bowmore");
-            // console.log(filtered)
-            // console.log(abcd)
-            // console.log(myFiles)
+
             console.log(filteredItem)
 
             return filteredItem;
-            // return myItems.value;
         }
         catch (err) {
             Promise.reject(err);
