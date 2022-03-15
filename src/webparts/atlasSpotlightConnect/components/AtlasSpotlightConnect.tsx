@@ -30,7 +30,7 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
     })
   }
   @autobind
-   openModal(id: number) {
+  openModal(id: number) {
     console.log(id)
     let dataset = [];
     dataset.push(this.props.terms)
@@ -49,13 +49,14 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 
   @autobind
   public async getAllDocs2() {
-    let selTerm =this.props.terms;
-    let allDocs = await this.SPService.getAllDocs(selTerm);
+    let selTerm = this.props.terms;
+    // let allDocs = await this.SPService.getAllDocs(selTerm);
+    let allDocs = await this.SPService.getAllDocs("Subbrand1647119834538");
     console.log(allDocs[0].ListItemAllFields.Brand.Label);
     let dataset = [];
     var myObj = (this.props.filePickerResult);
     var image = myObj.fileAbsoluteUrl;
-    dataset.push(allDocs,image);
+    dataset.push(allDocs, image);
     this.setState({
       currentDataset: dataset
     })
@@ -74,7 +75,7 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
       // Set Image URL received from the file picker component--->
       var myObj = (this.props.filePickerResult);
       var image = myObj.fileAbsoluteUrl;
-    
+
     }
     catch (err) {
       // console.error(err);
@@ -84,38 +85,38 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
     return (
 
       <div id="LoaderId">
-  
-    <div className="ms-rte-embedcode ms-rte-embedwp" >
-      <div className={styles.MainContainer}
-        style={{
-          backgroundImage: "url(" + image + ")",
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat'
-        }}>
 
-        {this.props.linkOrMetadata == 'Link' ?
-          <a className={styles.callToAction}
-            href={this.props.hyperlink} target="_blank" unselectable="on">
-            {this.props.titleText}
-            <i><IoIosArrowForward /></i>
-          </a>
-          :
-          <a className={styles.callToAction}
-            onClick={() => this.openModal(1)} unselectable="on">
-            {this.props.titleText}
-            <i><IoIosArrowForward /></i>
-          </a>
+        <div className="ms-rte-embedcode ms-rte-embedwp" >
+          <div className={styles.MainContainer}
+            style={{
+              backgroundImage: "url(" + image + ")",
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat'
+            }}>
 
-        }
+            {this.props.linkOrMetadata == 'Link' ?
+              <a className={styles.callToAction}
+                href={this.props.hyperlink} target="_blank" unselectable="on">
+                {this.props.titleText}
+                <i><IoIosArrowForward /></i>
+              </a>
+              :
+              <a className={styles.callToAction}
+                onClick={() => this.openModal(1)} unselectable="on">
+                {this.props.titleText}
+                <i><IoIosArrowForward /></i>
+              </a>
 
-        {this.state.showDescriptionModal == true ?
-          <DescriptionModal onClose={this.closeModal} dataset={this.state.currentDataset} ></DescriptionModal>
-          :
-          null
-        }
-      </div>
-      </div>
+            }
+
+            {this.state.showDescriptionModal == true ?
+              <DescriptionModal onClose={this.closeModal} dataset={this.state.currentDataset} ></DescriptionModal>
+              :
+              null
+            }
+          </div>
+        </div>
 
       </div>
 
