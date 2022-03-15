@@ -47,8 +47,10 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 
   }
 
+  @autobind
   public async getAllDocs2() {
-    let allDocs = await this.SPService.getAllDocs();
+    let selTerm =this.props.terms;
+    let allDocs = await this.SPService.getAllDocs(selTerm);
     console.log(allDocs[0].ListItemAllFields.Brand.Label);
     let dataset = [];
     var myObj = (this.props.filePickerResult);

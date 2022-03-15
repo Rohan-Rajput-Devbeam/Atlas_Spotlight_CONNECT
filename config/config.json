@@ -11,7 +11,17 @@
       ]
     }
   },
-  "externals": {},
+  "externals": {
+    "jquery": {
+      "path": "https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.js",
+      "globalName": "jQuery"
+    },
+    "SPServices": {
+      "path": "https://cdnjs.cloudflare.com/ajax/libs/jquery.SPServices/2014.02/jquery.SPServices-2014.02.js",
+      "globalName": "jQuery",
+      "globalDependencies": [ "jquery" ]
+    }
+  },
   "localizedResources": {
     "AtlasSpotlightConnectWebPartStrings": "lib/webparts/atlasSpotlightConnect/loc/{locale}.js",
     "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js",
