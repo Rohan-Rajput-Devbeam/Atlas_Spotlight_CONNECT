@@ -78,8 +78,8 @@ export class SPService {
 
     }
 
-    public async getAllDocs(selectedBrand,selectedTerm) {
-     
+    public async getAllDocs(selectedBrand, selectedTerm) {
+
 
         try {
             let requestUrl = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/${selectedBrand}')/files?$expand=ListItemAllFields`
@@ -104,7 +104,8 @@ export class SPService {
             //to check if it's a file, otherwise folder
             // if (MYITEM[i].ListItemAllFields.FileSystemObjectType != 1) {
             var filteredItem = MYITEM.filter(function (item) {
-                return item.ListItemAllFields.Brand_x0020_Location.Label == selectedTerm;
+                return item.ListItemAllFields.Brand_x0020_Location &&
+                    item.ListItemAllFields.Brand_x0020_Location.Label == selectedTerm
             });
 
             console.log(filteredItem)

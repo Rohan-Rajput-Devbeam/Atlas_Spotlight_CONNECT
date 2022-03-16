@@ -13,6 +13,7 @@ import { SPService } from '../Service/SPServices';
 export interface IAtlasSpotlightConnectState {
   showDescriptionModal: boolean;
   currentDataset: any;
+  brandID: any;
 }
 
 
@@ -25,7 +26,8 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 
     this.state = ({
       showDescriptionModal: false,
-      currentDataset: []
+      currentDataset: [],
+      brandID: ""
 
     })
   }
@@ -43,12 +45,23 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
   closeModal() { this.setState({ showDescriptionModal: false }); }
 
   public componentDidMount(): void {
-
+console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
     const myArray = window.location.href.split("/");
     let brandID = myArray[myArray.length - 1].split(".")[0];
-    this.getAllDocs2(brandID);
-
+    console.log(brandID)
+    this.props.terms ? this.getAllDocs2(brandID) : null
+    // this.setState({
+    //   brandID: brandID
+    // })
   }
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.term !== this.props.terms) {
+  //     console.log("Gadbad hai daya!!")
+
+  //     this.props.terms ? this.getAllDocs2(this.state.brandID) : null
+  //   }
+  // }
 
   @autobind
   public async getAllDocs2(brandID) {
@@ -56,10 +69,11 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
     console.log(selTerm[0].name)
     // let allDocs = await this.SPService.getAllDocs(selTerm);
     let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
-    console.log(allDocs[0].ListItemAllFields.Brand.Label);
+    // console.log(allDocs[0].ListItemAllFields.Brand.Label);
+    console.log(allDocs)
     let dataset = [];
     var myObj = (this.props.filePickerResult);
-    var image = myObj.fileAbsoluteUrl;
+    var image = myObj.fileAbsoluteUrl ? myObj.fileAbsoluteUrl : null;
     dataset.push(allDocs, image);
     this.setState({
       currentDataset: dataset
