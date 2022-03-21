@@ -9,8 +9,4 @@ export interface IAtlasSpotlightConnectProps {
   terms: IPickerTerms;
   linkOrMetadata:any;
   context: WebPartContext;
-
-
-
-
 }
