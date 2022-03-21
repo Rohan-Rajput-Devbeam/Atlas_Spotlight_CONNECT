@@ -8,6 +8,8 @@ export interface IAtlasSpotlightConnectProps {
   hyperlink:any;
   terms: IPickerTerms;
   linkOrMetadata:any;
+  people:any;
+
   context: WebPartContext;
 
 

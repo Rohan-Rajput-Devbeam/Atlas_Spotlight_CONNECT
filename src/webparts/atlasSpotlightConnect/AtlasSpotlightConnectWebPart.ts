@@ -16,7 +16,7 @@ import { PropertyFieldFilePicker, IPropertyFieldFilePickerProps, IFilePickerResu
 import { PropertyFieldEnterpriseTermPicker } from '@pnp/spfx-property-controls/lib/PropertyFieldEnterpriseTermPicker';
 
 import { IPickerTerms } from "@pnp/spfx-property-controls/lib/PropertyFieldEnterpriseTermPicker";
-import { PropertyFieldTermPicker } from '@pnp/spfx-property-controls';
+import { PrincipalType, PropertyFieldPeoplePicker, PropertyFieldTermPicker } from '@pnp/spfx-property-controls';
 
 
 
@@ -27,6 +27,7 @@ export interface IAtlasSpotlightConnectWebPartProps {
   hyperlink:any;
   terms: IPickerTerms;
   linkOrMetadata:any;
+  people:any;
 
 }
 
@@ -44,6 +45,8 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
         hyperlink:this.properties.hyperlink,
         terms:this.properties.terms,
         linkOrMetadata:this.properties.linkOrMetadata,
+        people: this.properties.people,
+
         context:this.context
       }
     );
@@ -129,6 +132,19 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
                   buttonLabel: "Image Picker",
                   label: "Select Image",
                 }),
+                PropertyFieldPeoplePicker('people', {
+                  label: 'People Picker',
+                  initialData: this.properties.people,
+                  allowDuplicate: false,
+                  principalType: [PrincipalType.Users, PrincipalType.SharePoint, PrincipalType.Security],
+                  onPropertyChange: this.onPropertyPaneFieldChanged,
+                  context: this.context as any,
+                  properties: this.properties,
+                  onGetErrorMessage: null,
+                  deferredValidationTime: 0,
+                  key: 'peopleFieldId'
+
+                })
                 // PropertyPaneTextField('hyperlink', {
                 //   label: "Hyperlink",
                 //   placeholder: "Enter your url",

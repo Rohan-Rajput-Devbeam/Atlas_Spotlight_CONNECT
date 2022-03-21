@@ -14,6 +14,9 @@ export interface IAtlasSpotlightConnectState {
   showDescriptionModal: boolean;
   currentDataset: any;
   brandID: any;
+  currUserGroups: any;
+  displayFlag: boolean;
+
 }
 
 
@@ -27,13 +30,17 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
     this.state = ({
       showDescriptionModal: false,
       currentDataset: [],
-      brandID: ""
+      brandID: "",
+      currUserGroups: [],
+      displayFlag: false,
+
+
 
     })
   }
   @autobind
   openModal(id: number) {
-    console.log(id)
+    // console.log(id)
     let dataset = [];
     dataset.push(this.props.terms)
     this.setState({
@@ -44,15 +51,25 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
   @autobind
   closeModal() { this.setState({ showDescriptionModal: false }); }
 
-  public componentDidMount(): void {
-console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
+  componentDidUpdate() {
+    // Typical usage (don't forget to compare props):
+    if (this.props.people !== this.props.people) {
+      this.getUserGroups2();
+    }
+  }
+
+  public async componentDidMount(): Promise<void> {
+    this.getUserGroups2();
+    // console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
     const myArray = window.location.href.split("/");
     let brandID = myArray[myArray.length - 1].split(".")[0];
-    console.log(brandID)
+    // console.log(brandID)
     this.props.terms ? this.getAllDocs2(brandID) : null
     // this.setState({
     //   brandID: brandID
     // })
+        
+            
   }
 
   // componentDidUpdate(prevProps) {
@@ -66,11 +83,11 @@ console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
   @autobind
   public async getAllDocs2(brandID) {
     let selTerm = this.props.terms;
-    console.log(selTerm[0].name)
+    // console.log(selTerm[0].name)
     // let allDocs = await this.SPService.getAllDocs(selTerm);
     let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
     // console.log(allDocs[0].ListItemAllFields.Brand.Label);
-    console.log(allDocs)
+    // console.log(allDocs)
     let dataset = [];
     var myObj = (this.props.filePickerResult);
     var image = myObj.fileAbsoluteUrl ? myObj.fileAbsoluteUrl : null;
@@ -82,13 +99,59 @@ console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
 
 
   }
+  @autobind
+  public async getUserGroups2() {
+
+    let usrGroups = await this.SPService.getUserGroups();
+    // console.log(usrGroups);
+    this.setState({
+      currUserGroups: usrGroups,
+
+    });
+    // console.log(this.state.currUserGroups);
+
+    this.categorizeGroups();
+  }
+
+  @autobind
+  public categorizeGroups() {
+    this.setState({
+      displayFlag: false
+    })
+    let response = this.state.currUserGroups;
+    var finalArray = response.value.map(function (obj: { Title: any; }) {
+      return obj.Title;
+    });
+    // console.log(finalArray);
+    // console.log(this.props.people);
+    var usrFullname = this.SPService.checkUseFullname(this.props.people);
+    // console.log(usrFullname);
+
+    for (let i = 0; i < this.props.people.length; i++) {
+      console.log(this.props.people[i].fullName);
+      if (finalArray.includes(this.props.people[i].fullName) || usrFullname ) {
+        // console.log("User Can view this section...!!");
+        this.setState({
+          displayFlag: true
+        })
+        this.render();
+      }
+      else{
+        this.setState({
+          displayFlag: false
+        })
+      }
+    }
+
+  }
+
 
   public render(): React.ReactElement<IAtlasSpotlightConnectProps> {
 
 
     // var termName = this.props.terms[0].name
     // console.log(termName);
-    console.log(this.props.linkOrMetadata)
+    // console.log(this.props.linkOrMetadata)
     try {
       // Set Image URL received from the file picker component--->
       var myObj = (this.props.filePickerResult);
@@ -102,6 +165,7 @@ console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
 
     return (
 
+      this.state.displayFlag?
       <div id="LoaderId">
 
         <div className="ms-rte-embedcode ms-rte-embedwp" >
@@ -136,6 +200,10 @@ console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
           </div>
         </div>
 
+      </div>
+      :
+      <div>
+        You need permission to view this webpart
       </div>
 
 
