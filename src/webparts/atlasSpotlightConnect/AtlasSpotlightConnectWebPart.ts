@@ -17,7 +17,8 @@ import { PropertyFieldEnterpriseTermPicker } from '@pnp/spfx-property-controls/l
 
 import { IPickerTerms } from "@pnp/spfx-property-controls/lib/PropertyFieldEnterpriseTermPicker";
 import { PrincipalType, PropertyFieldPeoplePicker, PropertyFieldTermPicker } from '@pnp/spfx-property-controls';
-
+import { PropertyFieldMessage} from '@pnp/spfx-property-controls/lib/PropertyFieldMessage';
+import { MessageBarType } from '@fluentui/react';
 
 
 export interface IAtlasSpotlightConnectWebPartProps {
@@ -131,7 +132,14 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
                   key: "filePickerId",
                   buttonLabel: "Image Picker",
                   label: "Select Image",
+                  
                 }),
+              //   PropertyFieldMessage("", {
+              //     key: "MessageKey",
+              //     text: "Image dimensions should be 1200(width) x 150(height)",
+              //     messageType:  MessageBarType.info,
+              //     isVisible:  true ,
+              // }),
                 PropertyFieldPeoplePicker('people', {
                   label: 'People Picker',
                   initialData: this.properties.people,
@@ -145,6 +153,7 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
                   key: 'peopleFieldId'
 
                 })
+               
                 // PropertyPaneTextField('hyperlink', {
                 //   label: "Hyperlink",
                 //   placeholder: "Enter your url",
