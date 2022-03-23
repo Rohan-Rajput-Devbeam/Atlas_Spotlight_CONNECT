@@ -71,6 +71,9 @@ export class SPService {
         }
     }
 
+    public getTermStore(){
+        
+    }
     public async getUserGroups() {
         var finalArray: any[];
         let myGroups = await (await this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/Web/CurrentUser/Groups`,
