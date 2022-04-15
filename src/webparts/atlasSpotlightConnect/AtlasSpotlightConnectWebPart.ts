@@ -17,24 +17,28 @@ import { PropertyFieldEnterpriseTermPicker } from '@pnp/spfx-property-controls/l
 
 import { IPickerTerms } from "@pnp/spfx-property-controls/lib/PropertyFieldEnterpriseTermPicker";
 import { PrincipalType, PropertyFieldPeoplePicker, PropertyFieldTermPicker } from '@pnp/spfx-property-controls';
-import { PropertyFieldMessage} from '@pnp/spfx-property-controls/lib/PropertyFieldMessage';
+import { PropertyFieldMessage } from '@pnp/spfx-property-controls/lib/PropertyFieldMessage';
 import { MessageBarType } from '@fluentui/react';
+import { sp } from '@pnp/sp/presets/all';
+import "@pnp/sp/webs";
+import "@pnp/sp/files";
+import "@pnp/sp/folders";
 
 
 export interface IAtlasSpotlightConnectWebPartProps {
   titleText: string;
   filePickerResult: any;
   description: string;
-  hyperlink:any;
+  hyperlink: any;
   terms: IPickerTerms;
-  linkOrMetadata:any;
-  people:any;
+  linkOrMetadata: any;
+  people: any;
 
 }
 
 export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<IAtlasSpotlightConnectWebPartProps> {
 
-  
+
 
   public render(): void {
     const element: React.ReactElement<IAtlasSpotlightConnectProps> = React.createElement(
@@ -43,12 +47,12 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
         description: this.properties.description,
         filePickerResult: this.properties.filePickerResult,
         titleText: this.properties.titleText,
-        hyperlink:this.properties.hyperlink,
-        terms:this.properties.terms,
-        linkOrMetadata:this.properties.linkOrMetadata,
+        hyperlink: this.properties.hyperlink,
+        terms: this.properties.terms,
+        linkOrMetadata: this.properties.linkOrMetadata,
         people: this.properties.people,
 
-        context:this.context
+        context: this.context
       }
     );
 
@@ -64,9 +68,9 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
-    let linkOrMetadataProperty:any=[];
+    let linkOrMetadataProperty: any = [];
 
-    if(this.properties.linkOrMetadata=='Link'){
+    if (this.properties.linkOrMetadata == 'Link') {
       linkOrMetadataProperty = PropertyPaneTextField('hyperlink', {
         label: "Hyperlink",
         placeholder: "Enter your url",
@@ -74,8 +78,8 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
 
       })
     }
-    else{
-      linkOrMetadataProperty =  PropertyFieldTermPicker('terms', {
+    else {
+      linkOrMetadataProperty = PropertyFieldTermPicker('terms', {
         label: 'Select terms',
         panelTitle: 'Select terms',
         initialValues: this.properties.terms,
@@ -103,7 +107,7 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-               
+
                 PropertyPaneTextField('titleText', {
                   label: 'Title',
                   value: this.properties.titleText,
@@ -127,19 +131,40 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
                   filePickerResult: this.properties.filePickerResult,
                   onPropertyChange: this.onPropertyPaneFieldChanged.bind(this),
                   properties: this.properties,
-                  onSave: (e: IFilePickerResult) => { this.properties.filePickerResult = e; },
+                  onSave: async (e: IFilePickerResult) => {
+                    console.log(e);
+                    console.log(e.downloadFileContent());
+                    //for uploaded images
+                    if (e.fileAbsoluteUrl == null) {
+                      await e.downloadFileContent()
+                        .then(async r => {
+                          console.log(r, e)
+                          let fileresult = await sp.web.getFolderByServerRelativeUrl("/sites/ModernConnect/SiteAssets/TestFilePickerImagesSup/").files.addUsingPath(e.fileName.replace(/ /g,"_"), r, { Overwrite: true });
+                          e = { ...e, fileAbsoluteUrl: this.context.pageContext.web.absoluteUrl + fileresult.data.ServerRelativeUrl.substring(20) }
+                          this.properties.filePickerResult = e;
+
+                        });
+                    }
+                    //for stock images/url/link images
+                    else {
+                      this.properties.filePickerResult = e;
+                    }
+
+                    console.log(this.properties.filePickerResult, e);
+
+                  },
                   onChanged: (e: IFilePickerResult) => { this.properties.filePickerResult = e; },
                   key: "filePickerId",
                   buttonLabel: "Image Picker",
                   label: "Select Image",
-                  
+
                 }),
-              //   PropertyFieldMessage("", {
-              //     key: "MessageKey",
-              //     text: "Image dimensions should be 1200(width) x 150(height)",
-              //     messageType:  MessageBarType.info,
-              //     isVisible:  true ,
-              // }),
+                //   PropertyFieldMessage("", {
+                //     key: "MessageKey",
+                //     text: "Image dimensions should be 1200(width) x 150(height)",
+                //     messageType:  MessageBarType.info,
+                //     isVisible:  true ,
+                // }),
                 PropertyFieldPeoplePicker('people', {
                   label: 'People Picker',
                   initialData: this.properties.people,
@@ -153,7 +178,7 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
                   key: 'peopleFieldId'
 
                 })
-               
+
                 // PropertyPaneTextField('hyperlink', {
                 //   label: "Hyperlink",
                 //   placeholder: "Enter your url",

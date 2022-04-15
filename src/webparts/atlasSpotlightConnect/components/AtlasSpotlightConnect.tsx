@@ -62,9 +62,9 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
   }
 
   public async componentDidMount(): Promise<void> {
-    // await taxonomy.termStores.get();
+    // const stores= await taxonomy.termStores.get();
 
-    const sets: ITermSets = await taxonomy.termStores.getByName("Taxonomy_10qkZWMjSPIPOU13f+TI4w==").getTermGroupById("b6da94cd-5a33-4632-9ac1-d54248e2755c").termSets
+    const sets = await taxonomy.termStores.getByName("Taxonomy_10qkZWMjSPIPOU13f+TI4w==").getTermGroupById("b6da94cd-5a33-4632-9ac1-d54248e2755c").termSets.select("Name").get()
     console.log(sets);
 //     const terms4: (ITerm & ITermData)[] = await store.getTermSetById("0ba6845c-1468-4ec5-a5a8-718f1fb05431").terms.get()
 
@@ -175,7 +175,8 @@ console.log(store);
       // Set Image URL received from the file picker component--->
       var myObj = (this.props.filePickerResult);
       var image = myObj.fileAbsoluteUrl;
-
+      console.log(myObj , image)
+      console.log(this.context.pageContext.web.absoluteUrl)
     }
     catch (err) {
       // console.error(err);
