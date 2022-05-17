@@ -81,8 +81,9 @@ console.log(store);
     this.getUserGroups2();
     // console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
     const myArray = window.location.href.split("/");
-    let brandID = myArray[myArray.length - 1].split(".")[0];
-    // console.log(brandID)
+    // let brandID = myArray[myArray.length - 1].split(".")[0];
+    let brandID = "Subbrand1647119834538"
+    console.log(brandID)
     this.props.terms ? this.getAllDocs2(brandID) : null
     // this.setState({
     //   brandID: brandID

@@ -139,7 +139,7 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
                       await e.downloadFileContent()
                         .then(async r => {
                           console.log(r, e)
-                          let fileresult = await sp.web.getFolderByServerRelativeUrl("/sites/ModernConnect/SiteAssets/TestFilePickerImagesSup/").files.addUsingPath(e.fileName.replace(/ /g,"_"), r, { Overwrite: true });
+                          let fileresult = await sp.web.getFolderByServerRelativeUrl("/sites/ModernConnect/SiteAssets/TestFilePickerImagesSup/").files.addUsingPath(e.fileName.replace(/ /g,"_").replace(/\(|\)|\[|\]/g,"_"), r, { Overwrite: true });
                           e = { ...e, fileAbsoluteUrl: this.context.pageContext.web.absoluteUrl + fileresult.data.ServerRelativeUrl.substring(20) }
                           this.properties.filePickerResult = e;
 
