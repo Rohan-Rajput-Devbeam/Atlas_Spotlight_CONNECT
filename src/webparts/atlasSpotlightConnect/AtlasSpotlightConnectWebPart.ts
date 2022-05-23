@@ -90,7 +90,7 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
         context: this.context,
         onGetErrorMessage: null,
         deferredValidationTime: 0,
-        limitByGroupNameOrID: 'ConnectModern',
+        limitByGroupNameOrID: 'Site Collection - bgsw1.sharepoint.com-sites-CONNECTII',
         // limitByTermsetNameOrID: 'Location',
         key: 'termSetsPickerFieldId'
       })
@@ -139,8 +139,8 @@ export default class AtlasSpotlightConnectWebPart extends BaseClientSideWebPart<
                       await e.downloadFileContent()
                         .then(async r => {
                           console.log(r, e)
-                          let fileresult = await sp.web.getFolderByServerRelativeUrl("/sites/ModernConnect/SiteAssets/TestFilePickerImagesSup/").files.addUsingPath(e.fileName.replace(/ /g,"_").replace(/\(|\)|\[|\]/g,"_"), r, { Overwrite: true });
-                          e = { ...e, fileAbsoluteUrl: this.context.pageContext.web.absoluteUrl + fileresult.data.ServerRelativeUrl.substring(20) }
+                          let fileresult = await sp.web.getFolderByServerRelativeUrl("/sites/CONNECTII/SiteAssets/Brand_Images/").files.addUsingPath(e.fileName.replace(/ /g, "_").replace(/\(|\)|\[|\]/g, "_"), r, { Overwrite: true });
+                          e = { ...e, fileAbsoluteUrl: this.context.pageContext.web.absoluteUrl + fileresult.data.ServerRelativeUrl.substring(16) } //Will need to chane substring if Site name changes---->
                           this.properties.filePickerResult = e;
 
                         });

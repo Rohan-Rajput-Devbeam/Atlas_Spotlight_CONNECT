@@ -38,7 +38,7 @@ export class SPService {
     rackName: string;
     people: [];
     authuser: boolean;
-    checkPermission:boolean;
+    checkPermission: boolean;
 
     public callSomething(items: any[]) {
         console.log(items);
@@ -48,7 +48,7 @@ export class SPService {
             allItems: items,
             currPageUrl: window.location.href,
             currUserGroups: [],
-        checkPermission: false
+            checkPermission: false
 
 
         }
@@ -65,14 +65,14 @@ export class SPService {
             allItems: [],
             currPageUrl: window.location.href,
             currUserGroups: [],
-        checkPermission: false
+            checkPermission: false
 
 
         }
     }
 
-    public getTermStore(){
-        
+    public getTermStore() {
+
     }
     public async getUserGroups() {
         var finalArray: any[];
@@ -86,27 +86,28 @@ export class SPService {
 
 
     }
-    public checkUseFullname(userArray){
-      var usrFullname = this.context.pageContext.user.displayName;
+    public checkUseFullname(userArray) {
+        var usrFullname = this.context.pageContext.user.displayName;
         var GroupArray
-      if (userArray && userArray.length > 0) {
-                            ///console.log(JSON.stringify(this.properties.people));
-    
-                             GroupArray = userArray.map((obj: { fullName: any; }) => {
-                                return obj.fullName;
-                            });
-                            // console.log(GroupArray);//Array Of Group in property pane   
-    
-    if(GroupArray.includes(usrFullname)){
-        return true
-     }
-     else{
-         return false
-     }}
-}
+        if (userArray && userArray.length > 0) {
+            ///console.log(JSON.stringify(this.properties.people));
+
+            GroupArray = userArray.map((obj: { fullName: any; }) => {
+                return obj.fullName;
+            });
+            // console.log(GroupArray);//Array Of Group in property pane   
+
+            if (GroupArray.includes(usrFullname)) {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+    }
 
     // public checkUserPermission(peopleArray) {
-        
+
     //     var usrFullname = this.context.pageContext.user.displayName;
     //     console.log(usrFullname)
     //     this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/Web/CurrentUser/Groups`,
@@ -152,20 +153,20 @@ export class SPService {
     // }
 
     public async getAllDocs(selectedBrand, selectedTerm) {
-
+        console.log(selectedBrand, selectedTerm)
 
         try {
-            let requestUrl = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/${selectedBrand}')/files?$expand=ListItemAllFields`
+            let requestUrl = `https://bgsw1.sharepoint.com/sites/CONNECTII/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/${selectedBrand}')/files?$expand=ListItemAllFields`
 
-            let requestUrlforFolders = `https://devbeam.sharepoint.com/sites/ModernConnect/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/${selectedBrand}')/folders?$expand=ListItemAllFields`
+            let requestUrlforFolders = `https://bgsw1.sharepoint.com/sites/CONNECTII/_api/web/getfolderbyserverrelativeurl('Brand%20Documents/${selectedBrand}')/folders?$expand=ListItemAllFields`
 
             let myItems = await (await this.context.spHttpClient.get(requestUrl, SPHttpClient.configurations.v1)).json();
             let myFolders = await (await this.context.spHttpClient.get(requestUrlforFolders, SPHttpClient.configurations.v1)).json();
 
-            // console.log(myItems.value);
+            console.log(myItems.value);
             // console.log(myItems);
 
-            // console.log(myFolders.value);
+            console.log(myFolders.value);
             // console.log(myFolders);
 
             // console.log(requestUrl);
@@ -173,26 +174,30 @@ export class SPService {
             // console.log(docDetails);
             // for (var i = 0; i < myItems.value.length; i++) {
             var MYITEM = myItems.value
+            // console.log(MYITEM)
+
 
             //to check if it's a file, otherwise folder
             // if (MYITEM[i].ListItemAllFields.FileSystemObjectType != 1) {
-            var filteredItem = MYITEM.filter(function (item) {
-                return item.ListItemAllFields.Brand_x0020_Location &&
-                    item.ListItemAllFields.Brand_x0020_Location.Label == selectedTerm
-            });
+            var filteredItem =  MYITEM.filter(function (item) {
+                console.log(item)
+                return item.ListItemAllFields.BeamConnect_x0020_Brand_x0020_Location &&
+                    item.ListItemAllFields.BeamConnect_x0020_Brand_x0020_Location[0].Label == selectedTerm
+            }) ;
 
-            // console.log(filteredItem)
+            console.log(filteredItem)
 
             for (var j = 0; j < myFolders.value.length; j++) {
-                // console.log(myFolders.value[j].ServerRelativeUrl.substring(37))
-                let innerFiles = await this.getAllDocs(myFolders.value[j].ServerRelativeUrl.substring(37), selectedTerm)
+                console.log(myFolders.value[j].ServerRelativeUrl.substring(33))
+                let innerFiles = await this.getAllDocs(myFolders.value[j].ServerRelativeUrl.substring(33), selectedTerm)
                 let ac = [...filteredItem, ...innerFiles]
-                // console.log(ac)
+                console.log(ac)
 
-                // console.log(filteredItem)
+                console.log(filteredItem)
                 filteredItem = ac;
-                // console.log(innerFiles)
+                console.log(innerFiles)
             }
+
 
             // console.log(filteredItem)
 

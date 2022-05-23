@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "atlas-spotlight-connect-client-side-solution",
+    "name": "Atlas_Spotlight_CONNECT",
     "id": "13e0849d-0bf4-48bd-986f-f89f586cc2aa",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
@@ -16,6 +16,6 @@
     }
   },
   "paths": {
-    "zippedPackage": "solution/atlas-spotlight-connect.sppkg"
+    "zippedPackage": "solution/Atlas_Spotlight_CONNECT.sppkg"
   }
 }

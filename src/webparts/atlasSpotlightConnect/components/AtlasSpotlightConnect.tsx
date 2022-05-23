@@ -10,6 +10,7 @@ import { SPService } from '../Service/SPServices';
 
 import { taxonomy, ITermGroup,ITermSets, ITermStore, ILabelMatchInfo, ITerms, ITermData } from "@pnp/sp-taxonomy";
 import { ITerm } from '@pnp/sp/taxonomy';
+import { sp } from '@pnp/sp/presets/all';
 
 
 
@@ -64,12 +65,12 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
   public async componentDidMount(): Promise<void> {
     // const stores= await taxonomy.termStores.get();
 
-    const sets = await taxonomy.termStores.getByName("Taxonomy_10qkZWMjSPIPOU13f+TI4w==").getTermGroupById("b6da94cd-5a33-4632-9ac1-d54248e2755c").termSets.select("Name").get()
+    const sets = await taxonomy.termStores.getByName("Taxonomy_emiHFC2qzG0vaXZyRo69WQ==").getTermGroupById("885d1a0f-7a5d-48b2-9c87-377a25b3c8cd").termSets.select("Name").get()
     console.log(sets);
 //     const terms4: (ITerm & ITermData)[] = await store.getTermSetById("0ba6845c-1468-4ec5-a5a8-718f1fb05431").terms.get()
 
 
-const store: ITermStore = taxonomy.termStores.getByName("Taxonomy_10qkZWMjSPIPOU13f+TI4w==");
+const store: ITermStore = taxonomy.termStores.getByName("Taxonomy_emiHFC2qzG0vaXZyRo69WQ==");
 console.log(store);
 
 // const group: ITermGroup = await store.getTermGroupById("b6da94cd-5a33-4632-9ac1-d54248e2755c");
@@ -81,8 +82,8 @@ console.log(store);
     this.getUserGroups2();
     // console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
     const myArray = window.location.href.split("/");
-    // let brandID = myArray[myArray.length - 1].split(".")[0];
-    let brandID = "Subbrand1647119834538"
+    let brandID = myArray[myArray.length - 1].split(".")[0];
+    // let brandID = "Brand1651756340521"
     console.log(brandID)
     this.props.terms ? this.getAllDocs2(brandID) : null
     // this.setState({
@@ -103,11 +104,11 @@ console.log(store);
   @autobind
   public async getAllDocs2(brandID) {
     let selTerm = this.props.terms;
-    // console.log(selTerm[0].name)
+    console.log(selTerm[0].name)
     // let allDocs = await this.SPService.getAllDocs(selTerm);
     let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
     // console.log(allDocs[0].ListItemAllFields.Brand.Label);
-    // console.log(allDocs)
+    console.log(allDocs)
     let dataset = [];
     var myObj = (this.props.filePickerResult);
     var image = myObj.fileAbsoluteUrl ? myObj.fileAbsoluteUrl : null;
@@ -134,7 +135,7 @@ console.log(store);
   }
 
   @autobind
-  public categorizeGroups() {
+  public async categorizeGroups() {
     this.setState({
       displayFlag: false
     })
@@ -144,24 +145,43 @@ console.log(store);
     });
     // console.log(finalArray);
     // console.log(this.props.people);
-    var usrFullname = this.SPService.checkUseFullname(this.props.people);
+    // var usrFullname = this.SPService.checkUseFullname(this.props.people);
     // console.log(usrFullname);
+    const GroupArray = this.props.people.map((obj: { email: any; }) => {
+      return obj.email;
+    });
+    let usrFullname = await (await sp.web.currentUser()).Email;
 
+    var Groupintersections = finalArray.filter(e => GroupArray.indexOf(e) !== -1);
     for (let i = 0; i < this.props.people.length; i++) {
-      console.log(this.props.people[i].fullName);
-      if (finalArray.includes(this.props.people[i].fullName) || usrFullname) {
+      // console.log(this.props.people[i].fullName);
+      if (finalArray.includes(this.props.people[i].fullName) || GroupArray.includes(usrFullname) || Groupintersections.length > 0) {
         // console.log("User Can view this section...!!");
         this.setState({
           displayFlag: true
         })
-        this.render();
-      }
-      else {
-        this.setState({
-          displayFlag: false
-        })
       }
     }
+
+
+
+
+
+    // for (let i = 0; i < this.props.people.length; i++) {
+    //   console.log(this.props.people[i].fullName);
+    //   if (finalArray.includes(this.props.people[i].fullName) || usrFullname) {
+    //     // console.log("User Can view this section...!!");
+    //     this.setState({
+    //       displayFlag: true
+    //     })
+    //     this.render();
+    //   }
+    //   else {
+    //     this.setState({
+    //       displayFlag: false
+    //     })
+    //   }
+    // }
 
   }
 
@@ -222,10 +242,10 @@ console.log(store);
           </div>
 
         </div>
-        :
-        <div>
-          You need permission to view this webpart
-        </div>
+        :null
+        // <div>
+        //   You need permission to view this webpart
+        // </div>
 
 
 

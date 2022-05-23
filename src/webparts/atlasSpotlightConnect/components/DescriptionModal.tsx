@@ -72,7 +72,7 @@ export class DescriptionModal extends React.Component<any, any> {
 
 
     
-
+{console.log(this.props.dataset)}
                                 <ul>
                                     {this.props.dataset[0].map((itemDetail, i) => (
 
@@ -84,7 +84,7 @@ export class DescriptionModal extends React.Component<any, any> {
                                                     size: 20,
                                                     imageFileType: 'svg'
                                                 })} /> {itemDetail.Name}</a>
-                                            <a data-interception="off" rel="noopener noreferrer" className="docDownload doc-download-link" href={"https://devbeam.sharepoint.com/sites/ModernConnect/_layouts/download.aspx?SourceUrl=" + itemDetail.ServerRelativeUrl} download> <IoMdDownload /></a>
+                                            <a data-interception="off" rel="noopener noreferrer" className="docDownload doc-download-link" href={"https://bgsw1.sharepoint.com/sites/CONNECTII/_layouts/download.aspx?SourceUrl=" + itemDetail.ServerRelativeUrl} download> <IoMdDownload /></a>
 
                                         </li>
 
