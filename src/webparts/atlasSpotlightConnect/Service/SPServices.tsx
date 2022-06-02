@@ -177,11 +177,11 @@ export class SPService {
 
             //to check if it's a file, otherwise folder
             // if (MYITEM[i].ListItemAllFields.FileSystemObjectType != 1) {
-            var filteredItem =  MYITEM.filter(function (item) {
+            var filteredItem = MYITEM.filter(function (item) {
                 console.log(item)
                 return item.ListItemAllFields.BeamConnect_x0020_Brand_x0020_Location &&
                     item.ListItemAllFields.BeamConnect_x0020_Brand_x0020_Location[0].Label == selectedTerm
-            }) ;
+            });
 
             console.log(filteredItem)
 
@@ -206,43 +206,29 @@ export class SPService {
         }
     }
 
-    public async getAllDocsRohan(selectedBrand) {
+    public async getAllDocsRohan(selectedBrand, selectedTerm) {
         try {
             console.log(" i am called babe")
-            // let listItems = await sp.web.lists.getByTitle("BrandDocuments").rootFolder.files.expand("ListItemAllFields").filter("ListItemAllFields/SubBrandID eq '" + selectedBrand + "'").get();
 
             const caml: ICamlQuery = {
                 // ViewXml: "<View Scope='RecursiveAll'><ViewFields><FieldRef Name='Title' /><FieldRef Name='FileLeafRef' /></ViewFields></View>",
-                // ViewXml: "<View Scope='RecursiveAll'><Query></Query><Where><Where><And><Geq><FieldRef Name='ID /><Value Type='Counter'>0</Value></Geq><Leq><FieldRef Name='ID' /><Value Type='Counter'>5000</Value></Leq></And></Where></Query></View>",
-                ViewXml :"<Query><View Scope='RecursiveAll'> <Query><Where><Geq><FieldRef Name='ID' /><Value Type='Counter'>22</Value></Geq></Where></Query> <RowLimit>100</RowLimit></View></Query>",
+                ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location'/><Value Type='TaxonomyFieldType'>" + selectedTerm + "</Value></Includes><Leq><FieldRef Name='ID' /><Value Type='Number'>4000</Value></Leq></And></Where></Query></View>",
+                // ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Geq><FieldRef Name='ID' /><Value Type='Number'>0</Value></Geq><And><Leq><FieldRef Name='ID' /><Value Type='Number'>4000</Value></Leq><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location' /><Value Type='text'>Playbooks</Value></Includes></And></And></Where></Query></View>",
+                // ViewXml :"<Query><View Scope='RecursiveAll'> <Query><Where><Geq><FieldRef Name='ID' /><Value Type='Counter'>22</Value></Geq></Where></Query></View></Query>",
                 FolderServerRelativeUrl: `Brand%20Documents/${selectedBrand}`,
-                
             };
-
-            // const d: IContentType = await sp.web.contentTypes.getById("0x0101").fields();
-
-            // // log content type name to console
-            // console.log(d);
-            // let listItems2 = await sp.web.lists.getByTitle("Brand Documents").items.get();
 
             let listItems = await sp.web.lists.getByTitle("Brand Documents").getItemsByCAMLQuery(caml, "FileRef");
 
-            // console.log( listItems2)
             console.log(listItems)
-            // let listItems = await sp.web.lists.getByTitle("Brand Documents").select('Name').getItemsByCAMLQuery(caml);
-            // const r: IContentType = await listItems.contentTypes.getById("0x0101").fields();
 
-            // // log content type name to console
-            // console.log(r);
-
-
-            return "    ";
+            return listItems;
         }
 
         catch (err) {
             console.error(err)
             Promise.reject(err);
-            return "I am error"
+            // return "I am error"
         }
     }
 }

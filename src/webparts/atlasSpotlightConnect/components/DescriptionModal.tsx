@@ -46,10 +46,10 @@ export class DescriptionModal extends React.Component<any, any> {
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"></link>
                 <script src='https://kit.fontawesome.com/a076d05399.js'
                     crossOrigin='anonymous'></script>
-               
-         
 
-                <Modal  show={this.state.isOpen} onHide={this.closeModal} keyboard={false} size="lg">
+
+
+                <Modal show={this.state.isOpen} onHide={this.closeModal} keyboard={false} size="lg">
                     <Modal.Header className={'modalHeader'} closeButton>
                         <Modal.Title>Ourbrand Documents</Modal.Title>
                     </Modal.Header>
@@ -61,29 +61,29 @@ export class DescriptionModal extends React.Component<any, any> {
                     }} className={'docView'}>
                         <Container>
                             <Row
-                            style={{
-                                // background: "rgba(255,255,255,0.8)",
-                                // borderRadius: "25px",
-                                // padding: "7px",
-                                // paddingTop: "20px"
-                                marginRight: "-68px"
-                            }}
+                                style={{
+                                    // background: "rgba(255,255,255,0.8)",
+                                    // borderRadius: "25px",
+                                    // padding: "7px",
+                                    // paddingTop: "20px"
+                                    marginRight: "-68px"
+                                }}
                             >
 
 
-    
-{console.log(this.props.dataset)}
+
+                                {console.log(this.props.dataset)}
                                 <ul>
                                     {this.props.dataset[0].map((itemDetail, i) => (
 
                                         <li className={'doc'}><span className="fa fa-star-o icon-star-empty"></span>
 
-                                            <a target="_blank" data-interception="off" rel="noopener noreferrer" href={itemDetail.ListItemAllFields.ServerRedirectedEmbedUri != null && itemDetail.ListItemAllFields.ServerRedirectedEmbedUri != "" ? itemDetail.ListItemAllFields.ServerRedirectedEmbedUri : itemDetail.ServerRelativeUrl}>
+                                            <a target="_blank" data-interception="off" rel="noopener noreferrer" href={itemDetail.ServerRedirectedEmbedUri != null && itemDetail.ServerRedirectedEmbedUri != "" ? itemDetail.ServerRedirectedEmbedUri : itemDetail.ServerRelativeUrl}>
                                                 <Icon {...getFileTypeIconProps({
-                                                    extension: itemDetail.Name.split(".")[1],
+                                                    extension: itemDetail.Title.split(".")[1],
                                                     size: 20,
                                                     imageFileType: 'svg'
-                                                })} /> {itemDetail.Name}</a>
+                                                })} /> {itemDetail.Title}</a>
                                             <a data-interception="off" rel="noopener noreferrer" className="docDownload doc-download-link" href={"https://bgsw1.sharepoint.com/sites/CONNECTII/_layouts/download.aspx?SourceUrl=" + itemDetail.ServerRelativeUrl} download> <IoMdDownload /></a>
 
                                         </li>
