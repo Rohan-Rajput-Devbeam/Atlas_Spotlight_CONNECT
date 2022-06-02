@@ -1,22 +1,20 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { sp } from '@pnp/sp/presets/all';
+import { ICamlQuery } from "@pnp/sp/lists";
+
 
 
 
 import {
     SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions
 } from '@microsoft/sp-http';
-import "@pnp/sp/webs";
-import "@pnp/sp/folders";
-import { IPickerTerms } from "@pnp/spfx-property-controls";
-import autobind from "autobind-decorator";
-import pnp from "sp-pnp-js";
 
 
-import { escape } from '@microsoft/sp-lodash-subset';
+
+// import { escape } from '@microsoft/sp-lodash-subset';
 // other import statements
-const $: any = require("jquery");
-require('SPServices');
+// const $: any = require("jquery");
+// require('SPServices');
 
 
 const progList = sp.web.lists.getByTitle('Programs');
@@ -205,6 +203,46 @@ export class SPService {
         }
         catch (err) {
             Promise.reject(err);
+        }
+    }
+
+    public async getAllDocsRohan(selectedBrand) {
+        try {
+            console.log(" i am called babe")
+            // let listItems = await sp.web.lists.getByTitle("BrandDocuments").rootFolder.files.expand("ListItemAllFields").filter("ListItemAllFields/SubBrandID eq '" + selectedBrand + "'").get();
+
+            const caml: ICamlQuery = {
+                // ViewXml: "<View Scope='RecursiveAll'><ViewFields><FieldRef Name='Title' /><FieldRef Name='FileLeafRef' /></ViewFields></View>",
+                // ViewXml: "<View Scope='RecursiveAll'><Query></Query><Where><Where><And><Geq><FieldRef Name='ID /><Value Type='Counter'>0</Value></Geq><Leq><FieldRef Name='ID' /><Value Type='Counter'>5000</Value></Leq></And></Where></Query></View>",
+                ViewXml :"<Query><View Scope='RecursiveAll'> <Query><Where><Geq><FieldRef Name='ID' /><Value Type='Counter'>22</Value></Geq></Where></Query> <RowLimit>100</RowLimit></View></Query>",
+                FolderServerRelativeUrl: `Brand%20Documents/${selectedBrand}`,
+                
+            };
+
+            // const d: IContentType = await sp.web.contentTypes.getById("0x0101").fields();
+
+            // // log content type name to console
+            // console.log(d);
+            // let listItems2 = await sp.web.lists.getByTitle("Brand Documents").items.get();
+
+            let listItems = await sp.web.lists.getByTitle("Brand Documents").getItemsByCAMLQuery(caml, "FileRef");
+
+            // console.log( listItems2)
+            console.log(listItems)
+            // let listItems = await sp.web.lists.getByTitle("Brand Documents").select('Name').getItemsByCAMLQuery(caml);
+            // const r: IContentType = await listItems.contentTypes.getById("0x0101").fields();
+
+            // // log content type name to console
+            // console.log(r);
+
+
+            return "    ";
+        }
+
+        catch (err) {
+            console.error(err)
+            Promise.reject(err);
+            return "I am error"
         }
     }
 }

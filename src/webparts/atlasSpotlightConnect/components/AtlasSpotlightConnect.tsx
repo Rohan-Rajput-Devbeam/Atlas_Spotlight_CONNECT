@@ -82,8 +82,8 @@ console.log(store);
     this.getUserGroups2();
     // console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
     const myArray = window.location.href.split("/");
-    let brandID = myArray[myArray.length - 1].split(".")[0];
-    // let brandID = "Brand1651756340521"
+    // let brandID = myArray[myArray.length - 1].split(".")[0];
+    let brandID = "Brand1651756225855"
     console.log(brandID)
     this.props.terms ? this.getAllDocs2(brandID) : null
     // this.setState({
@@ -103,16 +103,19 @@ console.log(store);
 
   @autobind
   public async getAllDocs2(brandID) {
+    console.log(brandID)
     let selTerm = this.props.terms;
     console.log(selTerm[0].name)
     // let allDocs = await this.SPService.getAllDocs(selTerm);
-    let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
+          //  let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
+    let alldocs2 = await this.SPService.getAllDocsRohan("Brand1651756225855")
+    console.log(alldocs2)
     // console.log(allDocs[0].ListItemAllFields.Brand.Label);
-    console.log(allDocs)
+            // console.log(allDocs)
     let dataset = [];
     var myObj = (this.props.filePickerResult);
     var image = myObj.fileAbsoluteUrl ? myObj.fileAbsoluteUrl : null;
-    dataset.push(allDocs, image);
+              // dataset.push(allDocs, image);
     this.setState({
       currentDataset: dataset
     })
