@@ -20,7 +20,6 @@ export interface IAtlasSpotlightConnectState {
 	brandID: any;
 	currUserGroups: any;
 	displayFlag: boolean;
-
 }
 
 

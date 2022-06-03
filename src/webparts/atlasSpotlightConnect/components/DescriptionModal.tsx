@@ -80,10 +80,10 @@ export class DescriptionModal extends React.Component<any, any> {
 
                                             <a target="_blank" data-interception="off" rel="noopener noreferrer" href={itemDetail.ServerRedirectedEmbedUri != null && itemDetail.ServerRedirectedEmbedUri != "" ? itemDetail.ServerRedirectedEmbedUri : itemDetail.ServerRelativeUrl}>
                                                 <Icon {...getFileTypeIconProps({
-                                                    extension: itemDetail.Title.split(".")[1],
+                                                    extension: itemDetail.FileLeafRef.split(".")[1],
                                                     size: 20,
                                                     imageFileType: 'svg'
-                                                })} /> {itemDetail.Title}</a>
+                                                })} /> {itemDetail.FileLeafRef}</a>
                                             <a data-interception="off" rel="noopener noreferrer" className="docDownload doc-download-link" href={"https://bgsw1.sharepoint.com/sites/CONNECTII/_layouts/download.aspx?SourceUrl=" + itemDetail.ServerRelativeUrl} download> <IoMdDownload /></a>
 
                                         </li>

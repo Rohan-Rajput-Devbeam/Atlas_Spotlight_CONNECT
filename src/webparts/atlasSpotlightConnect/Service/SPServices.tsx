@@ -209,22 +209,22 @@ export class SPService {
     public async getAllDocsCAML(selectedBrand, selectedTerm, lowerRange, upperRange) {
         try {
             console.log(" i am called babe")
-            const caml2: ICamlQuery = {
-                ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location'/><Value Type='TaxonomyFieldType'>" + selectedTerm + "</Value></Includes><And><Geq><FieldRef Name='ID' /><Value Type='Number'>"+lowerRange+"</Value></Geq><Leq><FieldRef Name='ID' /><Value Type='Number'>"+upperRange+"</Value></Leq></And></And></Where></Query></View>",
+            const caml: ICamlQuery = {
+                ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location'/><Value Type='TaxonomyFieldType'>" + selectedTerm + "</Value></Includes><And><Geq><FieldRef Name='ID' /><Value Type='Number'>" + lowerRange + "</Value></Geq><Leq><FieldRef Name='ID' /><Value Type='Number'>" + upperRange + "</Value></Leq></And></And></Where></Query></View>",
                 FolderServerRelativeUrl: `Brand%20Documents/${selectedBrand}`
             }
 
-          /*  const caml: ICamlQuery = {
-                // ViewXml: "<View Scope='RecursiveAll'><ViewFields><FieldRef Name='Title' /><FieldRef Name='FileLeafRef' /></ViewFields></View>",
-                ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location'/><Value Type='TaxonomyFieldType'>" + selectedTerm + "</Value></Includes><Leq><FieldRef Name='ID' /><Value Type='Number'>4500</Value></Leq></And></Where></Query></View>",
-                // ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location'/><Value Type='TaxonomyFieldType'>Sampling Guides</Value></Includes><Leq><FieldRef Name='ID' /><Value Type='Number'>4000</Value></Leq></And></Where></Query></View>",
+            /*  const caml: ICamlQuery = {
+                  // ViewXml: "<View Scope='RecursiveAll'><ViewFields><FieldRef Name='Title' /><FieldRef Name='FileLeafRef' /></ViewFields></View>",
+                  ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location'/><Value Type='TaxonomyFieldType'>" + selectedTerm + "</Value></Includes><Leq><FieldRef Name='ID' /><Value Type='Number'>4500</Value></Leq></And></Where></Query></View>",
+                  // ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location'/><Value Type='TaxonomyFieldType'>Sampling Guides</Value></Includes><Leq><FieldRef Name='ID' /><Value Type='Number'>4000</Value></Leq></And></Where></Query></View>",
+  
+                  // ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Geq><FieldRef Name='ID' /><Value Type='Number'>0</Value></Geq><And><Leq><FieldRef Name='ID' /><Value Type='Number'>4000</Value></Leq><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location' /><Value Type='text'>Playbooks</Value></Includes></And></And></Where></Query></View>",
+                  // ViewXml :"<Query><View Scope='RecursiveAll'> <Query><Where><Geq><FieldRef Name='ID' /><Value Type='Counter'>22</Value></Geq></Where></Query></View></Query>",
+                  FolderServerRelativeUrl: `Brand%20Documents/${selectedBrand}`,
+              }; */
 
-                // ViewXml: "<View Scope='RecursiveAll'><Query><Where><And><Geq><FieldRef Name='ID' /><Value Type='Number'>0</Value></Geq><And><Leq><FieldRef Name='ID' /><Value Type='Number'>4000</Value></Leq><Includes><FieldRef Name='BeamConnect_x0020_Brand_x0020_Location' /><Value Type='text'>Playbooks</Value></Includes></And></And></Where></Query></View>",
-                // ViewXml :"<Query><View Scope='RecursiveAll'> <Query><Where><Geq><FieldRef Name='ID' /><Value Type='Counter'>22</Value></Geq></Where></Query></View></Query>",
-                FolderServerRelativeUrl: `Brand%20Documents/${selectedBrand}`,
-            }; */
-
-            let listItems = await sp.web.lists.getByTitle("Brand Documents").getItemsByCAMLQuery(caml2, "FileRef");
+            let listItems = await sp.web.lists.getByTitle("Brand Documents").getItemsByCAMLQuery(caml, "FileRef", "FileLeafRef");
             // let listItems2 = await sp.web.lists.getByTitle("Brand Documents").getItemsByCAMLQuery(caml2, "FileRef");
 
             console.log(listItems)
