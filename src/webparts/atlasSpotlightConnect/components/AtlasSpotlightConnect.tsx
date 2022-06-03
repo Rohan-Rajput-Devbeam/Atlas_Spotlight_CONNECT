@@ -98,7 +98,34 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 		console.log(selTerm[0].name)
 		// let allDocs = await this.SPService.getAllDocs(selTerm);
 		//  let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
-		let alldocs2 = await this.SPService.getAllDocsRohan(brandID, selTerm[0].name)
+		let lowerRange = 0, upperRange = 4500;
+		let alldocs2 = []
+		let currentDocSet = [];
+
+		//approach 1 to get ranged documents
+		/* do {
+			currentDocSet = []
+			currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
+			alldocs2 = [...alldocs2, ...currentDocSet]
+			lowerRange = upperRange + 1;
+			upperRange = upperRange + 4500;
+
+		} while (currentDocSet.length > 0)
+
+		//adding one more iteration even if the result is empty last time.
+		currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
+
+		alldocs2 = [...alldocs2, ...currentDocSet] */
+
+		//approach 2 to get ranged documents
+		for(let i = 0; i<6;i++){
+			currentDocSet = []
+			currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
+			alldocs2 = [...alldocs2, ...currentDocSet]
+			lowerRange = upperRange + 1;
+			upperRange = upperRange + 4500;
+		}
+
 		console.log(alldocs2)
 		// console.log(allDocs[0].ListItemAllFields.Brand.Label);
 		// console.log(allDocs)
