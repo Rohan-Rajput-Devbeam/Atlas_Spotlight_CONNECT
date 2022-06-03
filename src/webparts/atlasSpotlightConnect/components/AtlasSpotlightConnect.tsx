@@ -73,8 +73,8 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 		this.getUserGroups2();
 		// console.log("ABASBASBASBABSBASBSBSABSBABSBAB")
 		const myArray = window.location.href.split("/");
-		// let brandID = myArray[myArray.length - 1].split(".")[0];
-		let brandID = "Brand1651756225855"
+		let brandID = myArray[myArray.length - 1].split(".")[0];
+		// let brandID = "Brand1651756225855"
 		console.log(brandID)
 		this.props.terms ? this.getAllDocs2(brandID) : null
 		// this.setState({
