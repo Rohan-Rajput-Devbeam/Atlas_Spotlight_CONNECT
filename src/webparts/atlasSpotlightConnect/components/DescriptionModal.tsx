@@ -74,21 +74,36 @@ export class DescriptionModal extends React.Component<any, any> {
 
                                 {console.log(this.props.dataset)}
                                 <ul>
-                                    {this.props.dataset[0].map((itemDetail, i) => (
+                                    {this.props.dataset.length != 0 ?
+                                        <>
+                                            {
+                                                this.props.dataset[0].length != 0?
+                                                    <>
+                                                        {
+                                                            this.props.dataset[0].map((itemDetail, i) => (
 
-                                        <li className={'doc'}><span className="fa fa-star-o icon-star-empty"></span>
+                                                                <li className={'doc'}><span className="fa fa-star-o icon-star-empty"></span>
 
-                                            <a target="_blank" data-interception="off" rel="noopener noreferrer" href={itemDetail.ServerRedirectedEmbedUri != null && itemDetail.ServerRedirectedEmbedUri != "" ? itemDetail.ServerRedirectedEmbedUri : itemDetail.ServerRelativeUrl}>
-                                                <Icon {...getFileTypeIconProps({
-                                                    extension: itemDetail.FileLeafRef.split(".")[1],
-                                                    size: 20,
-                                                    imageFileType: 'svg'
-                                                })} /> {itemDetail.FileLeafRef}</a>
-                                            <a data-interception="off" rel="noopener noreferrer" className="docDownload doc-download-link" href={"https://bgsw1.sharepoint.com/sites/CONNECTII/_layouts/download.aspx?SourceUrl=" + itemDetail.ServerRelativeUrl} download> <IoMdDownload /></a>
+                                                                    <a target="_blank" data-interception="off" rel="noopener noreferrer" href={itemDetail.ServerRedirectedEmbedUri != null && itemDetail.ServerRedirectedEmbedUri != "" ? itemDetail.ServerRedirectedEmbedUri : itemDetail.ServerRelativeUrl}>
+                                                                        <Icon {...getFileTypeIconProps({
+                                                                            extension: itemDetail.FileLeafRef.split(".")[1],
+                                                                            size: 20,
+                                                                            imageFileType: 'svg'
+                                                                        })} /> {itemDetail.FileLeafRef}</a>
+                                                                    <a data-interception="off" rel="noopener noreferrer" className="docDownload doc-download-link" href={"https://bgsw1.sharepoint.com/sites/CONNECTII/_layouts/download.aspx?SourceUrl=" + itemDetail.ServerRelativeUrl} download> <IoMdDownload /></a>
 
-                                        </li>
+                                                                </li>
 
-                                    ))}
+                                                            ))
+                                                        }
+                                                    </>
+                                                    :
+                                                    <h3>No data available!</h3>
+                                            }
+                                        </>
+                                        :
+                                        <h3>Please wait while loading the data...</h3>
+                                    }
                                 </ul>
 
 
