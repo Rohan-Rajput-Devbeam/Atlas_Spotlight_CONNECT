@@ -150,7 +150,7 @@ export class SPService {
     //         return this.checkPermission
     // }
 
-    public async getAllDocs(selectedBrand, selectedTerm) {
+   /* public async getAllDocs(selectedBrand, selectedTerm) {
         console.log(selectedBrand, selectedTerm)
 
         try {
@@ -205,6 +205,7 @@ export class SPService {
             Promise.reject(err);
         }
     }
+    */
 
     public async getAllDocsCAML(selectedBrand, selectedTerm, lowerRange, upperRange) {
         try {
