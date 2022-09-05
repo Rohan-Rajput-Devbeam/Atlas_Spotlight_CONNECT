@@ -113,4 +113,16 @@
   }
 }
 
+.downloadBut1 {
+  color: #616161;
+  cursor: pointer;
+  margin-left: 3em;
+}
+.downloadBut1:hover {
+  color: #cc0a0a;
+}
+.downloadBut1:active {
+  color: #cc0a0a;
+}
+
 

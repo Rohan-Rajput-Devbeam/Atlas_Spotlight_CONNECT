@@ -11,7 +11,12 @@ import { SPService } from '../Service/SPServices';
 import { taxonomy, ITermGroup, ITermSets, ITermStore, ILabelMatchInfo, ITerms, ITermData } from "@pnp/sp-taxonomy";
 import { ITerm } from '@pnp/sp/taxonomy';
 import { sp } from '@pnp/sp/presets/all';
+import { WebPartContext } from '@microsoft/sp-webpart-base';
 
+import "isomorphic-fetch"; // or import the fetch polyfill you installed
+import { Client } from "@microsoft/microsoft-graph-client";
+import { MSGraphClient } from '@microsoft/sp-http';
+import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 
 
 export interface IAtlasSpotlightConnectState {
@@ -20,7 +25,16 @@ export interface IAtlasSpotlightConnectState {
 	brandID: any;
 	currUserGroups: any;
 	displayFlag: boolean;
-	
+
+	currentUserEmail: string;
+	cuurentUserID: any;
+	currentUserFavItems: any;
+	favDocMapping: any;
+	favListIDs: any;
+	docItems: any;
+
+
+
 }
 
 
@@ -31,14 +45,26 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 		super(props);
 		this.SPService = new SPService(this.props.context);
 
+
 		this.state = ({
 			showDescriptionModal: false,
 			currentDataset: [],
 			brandID: "",
 			currUserGroups: [],
-			displayFlag: false
-			
+			displayFlag: false,
+
+			currentUserEmail: "",
+			cuurentUserID: "",
+			currentUserFavItems: [],
+			favDocMapping: [],
+			favListIDs: [],
+			docItems: []
+
+
 		})
+
+		// this.getFavoriteListItems = this.getFavoriteListItems.bind(this)
+		// this.checkFavDocuments = this.checkFavDocuments.bind(this)
 	}
 	@autobind
 	openModal(id: number) {
@@ -60,6 +86,130 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 		}
 	}
 
+	public async getFavoriteListItems() {
+		let fav = await this.SPService.getFavoriteListItems(this.state.cuurentUserID);
+		console.log(fav)
+		let currUserFav = fav.filter(item => item.AuthorId == this.state.cuurentUserID);
+		console.log(currUserFav)
+		this.setState({
+			currentUserFavItems: currUserFav
+		}, () => this.checkFavDocuments())
+
+		// let bab = await this.SPService._pnpPagedSearchSegmentClick(this.state.cuurentUserID)
+		// console.log(bab)
+	}
+
+	public async checkFavDocuments() {
+		let favDocMapping = []
+		let favListIDs = []
+		for (let i = 0; i < this.state.currentDataset[0].length; i++) {
+			let flag = false;
+			let listID = -1;
+			// let object = {flag:false, listID : 0};
+			for (let j = 0; j < this.state.currentUserFavItems.length; j++) {
+				if (this.state.currentUserFavItems[j].URL.Url.includes(this.state.currentDataset[0][i].FileLeafRef))
+					flag = true
+				listID = this.state.currentUserFavItems[j].ID
+				// object = {flag:true, listID : this.state.currentUserFavItems[j].ID}
+			}
+			favDocMapping.push(flag)
+			favListIDs.push(listID)
+		}
+		console.log(favDocMapping)
+		this.setState({
+			favDocMapping: favDocMapping,
+			favListIDs: favListIDs
+		})
+	}
+	public async toggleFavorites(item, isFavorite, listID) {
+		console.log(item)
+		console.log(isFavorite, listID)
+		// this.SPService.toggleFavorites(item, isFavorite, listID)
+		this.getAllDocs2(this.state.brandID);
+		this.getFavoriteListItems()
+	}
+
+	public async addFeatured(docID, featured) {
+		console.log(docID, featured)
+
+		if (featured == true) {
+			await this.SPService.removedFeatured(docID);
+			// toast.error('Removed Featured!', {
+			// 	position: "top-right",
+			// 	autoClose: 5000,
+			// 	hideProgressBar: false,
+			// 	closeOnClick: true,
+			// 	pauseOnHover: true,
+			// 	draggable: true,
+			// 	progress: undefined,
+			// });
+		}
+		else {
+			await this.SPService.addFeatured(docID);
+			// toast.success('Featured Updated',
+			// 	{
+			// 		position: "top-right",
+			// 		autoClose: 5000,      // 		hideProgressBar: false,
+			// 		closeOnClick: true,
+			// 		pauseOnHover: true,
+			// 		draggable: true,
+			// 		progress: undefined,
+			// 	});
+		}
+		console.log(docID);
+		this.getAllDocs2(this.state.brandID);
+	}
+	@autobind
+	public async getAllDocs2(brandID) {
+		console.log(brandID)
+		let selTerm = this.props.terms;
+		console.log(selTerm[0].name)
+		// let allDocs = await this.SPService.getAllDocs(selTerm);
+		//  let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
+		let lowerRange = 0, upperRange = 4500;
+		let alldocs2 = []
+		let currentDocSet = [];
+
+		//approach 1 to get ranged documents
+		/* do {
+			currentDocSet = []
+			currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
+			alldocs2 = [...alldocs2, ...currentDocSet]
+			lowerRange = upperRange + 1;
+			upperRange = upperRange + 4500;
+ 
+		} while (currentDocSet.length > 0)
+ 
+		//adding one more iteration even if the result is empty last time.
+		currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
+ 
+		alldocs2 = [...alldocs2, ...currentDocSet] */
+
+		//approach 2 to get ranged documents
+		for (let i = 0; i < 6; i++) {
+			currentDocSet = []
+			currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
+			alldocs2 = [...alldocs2, ...currentDocSet]
+			lowerRange = upperRange + 1;
+			upperRange = upperRange + 4500;
+		}
+
+		console.log(alldocs2)
+		// console.log(allDocs[0].ListItemAllFields.Brand.Label);
+		// console.log(allDocs)
+		let dataset = [];
+		var myObj = (this.props.filePickerResult);
+		var image = myObj.fileAbsoluteUrl ? myObj.fileAbsoluteUrl : null;
+		dataset.push(alldocs2, image);
+		this.setState({
+			currentDataset: dataset
+		})
+		console.log(this.state.currentDataset[0])
+	}
+
+
+
+
 	public async componentDidMount(): Promise<void> {
 		// const stores= await taxonomy.termStores.get();
 
@@ -79,9 +229,16 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 		// let brandID = "Brand1651756225855"
 		console.log(brandID)
 		this.props.terms ? this.getAllDocs2(brandID) : null
-		// this.setState({
-		//   brandID: brandID
-		// })
+		this.setState({
+			brandID: brandID
+		});
+
+		this.getCurrentUser()
+		this.getAllDocs2(brandID);
+		this.getFavoriteListItems()
+		this.getUserGroups2();
+		this.getFavoriteListItems();
+		this.checkFavDocuments();
 	}
 
 	// componentDidUpdate(prevProps) {
@@ -92,52 +249,7 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 	//   }
 	// }
 
-	@autobind
-	public async getAllDocs2(brandID) {
-		console.log(brandID)
-		let selTerm = this.props.terms;
-		console.log(selTerm[0].name)
-		// let allDocs = await this.SPService.getAllDocs(selTerm);
-		//  let allDocs = await this.SPService.getAllDocs(brandID, selTerm[0].name);
-		let lowerRange = 0, upperRange = 4500;
-		let alldocs2 = []
-		let currentDocSet = [];
 
-		//approach 1 to get ranged documents
-		/* do {
-			currentDocSet = []
-			currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
-			alldocs2 = [...alldocs2, ...currentDocSet]
-			lowerRange = upperRange + 1;
-			upperRange = upperRange + 4500;
-
-		} while (currentDocSet.length > 0)
-
-		//adding one more iteration even if the result is empty last time.
-		currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
-
-		alldocs2 = [...alldocs2, ...currentDocSet] */
-
-		//approach 2 to get ranged documents
-		for(let i = 0; i<6;i++){
-			currentDocSet = []
-			currentDocSet = await this.SPService.getAllDocsCAML(brandID, selTerm[0].name, lowerRange, upperRange)
-			alldocs2 = [...alldocs2, ...currentDocSet]
-			lowerRange = upperRange + 1;
-			upperRange = upperRange + 4500;
-		}
-
-		console.log(alldocs2)
-		// console.log(allDocs[0].ListItemAllFields.Brand.Label);
-		// console.log(allDocs)
-		let dataset = [];
-		var myObj = (this.props.filePickerResult);
-		var image = myObj.fileAbsoluteUrl ? myObj.fileAbsoluteUrl : null;
-		dataset.push(alldocs2, image);
-		this.setState({
-			currentDataset: dataset
-		})
-	}
 	@autobind
 	public async getUserGroups2() {
 
@@ -154,26 +266,36 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 
 	@autobind
 	public async categorizeGroups() {
+
 		this.setState({
 			displayFlag: false
 		})
 		let response = this.state.currUserGroups;
-		var finalArray = response.value.map(function (obj: { Title: any; }) {
-			return obj.Title;
+		// var finalArray = response.value.map(function (obj: { Title: any; }) {
+		// 	return obj.Title;
+		// });
+		var finalArray = response.value.map(function (obj: { displayName: any; }) {
+			return obj.displayName;
 		});
+
 		// console.log(finalArray);
 		// console.log(this.props.people);
 		// var usrFullname = this.SPService.checkUseFullname(this.props.people);
 		// console.log(usrFullname);
-		const GroupArray = this.props.people.map((obj: { email: any; }) => {
-			return obj.email;
-		});
+
+		// const GroupArray = this.props.people.map((obj: { email: any; }) => {
+		// 	return obj.email;
+		// });
+		var tempPeopleArray = this.props.people
+		const GroupArray = tempPeopleArray.map(element => element.description);
+		//     console.log(GroupArray)
+		// console.log(GroupArray)
 		let usrFullname = await (await sp.web.currentUser()).Email;
 
 		var Groupintersections = finalArray.filter(e => GroupArray.indexOf(e) !== -1);
 		for (let i = 0; i < this.props.people.length; i++) {
 			// console.log(this.props.people[i].fullName);
-			if (finalArray.includes(this.props.people[i].fullName) || GroupArray.includes(usrFullname) || Groupintersections.length > 0) {
+			if (GroupArray.includes(usrFullname) || Groupintersections.length > 0) {
 				// console.log("User Can view this section...!!");
 				this.setState({
 					displayFlag: true
@@ -203,6 +325,17 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 
 	}
 
+	public async getCurrentUser() {
+		let curuser = await this.SPService.getCurrentUser();
+		let cur = curuser.LoginName.split('|')
+		console.log(curuser)
+		console.log(cur, cur[cur.length - 1])
+		this.setState({
+			currentUserEmail: cur[cur.length - 1],
+			cuurentUserID: curuser.Id
+		})
+	}
+
 
 	public render(): React.ReactElement<IAtlasSpotlightConnectProps> {
 
@@ -214,8 +347,8 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 			// Set Image URL received from the file picker component--->
 			var myObj = (this.props.filePickerResult);
 			var image = myObj.fileAbsoluteUrl;
-			console.log(myObj, image)
-			console.log(this.context.pageContext.web.absoluteUrl)
+			// console.log(myObj, image)
+			// console.log(this.context.pageContext.web.absoluteUrl)
 		}
 		catch (err) {
 			// console.error(err);
@@ -252,7 +385,8 @@ export default class AtlasSpotlightConnect extends React.Component<IAtlasSpotlig
 							}
 
 							{this.state.showDescriptionModal == true ?
-								<DescriptionModal onClose={this.closeModal} dataset={this.state.currentDataset} ></DescriptionModal>
+								<DescriptionModal onClose={this.closeModal} dataset={this.state.currentDataset} favDocMapping={this.state.favDocMapping}
+								favListIDs={this.state.favListIDs} brandID={this.state.brandID} terms = {this.props.terms} ></DescriptionModal>
 								:
 								null
 							}

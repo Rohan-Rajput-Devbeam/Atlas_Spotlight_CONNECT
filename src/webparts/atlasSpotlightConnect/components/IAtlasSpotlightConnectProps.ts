@@ -11,4 +11,5 @@ export interface IAtlasSpotlightConnectProps {
   people:any;
 
   context: WebPartContext;
+  
 }
